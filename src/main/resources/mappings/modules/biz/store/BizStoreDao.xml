@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.biz.dao.store.BizStoreDao">
+    
+	<sql id="bizStoreColumns">
+		a.id AS "id",
+		a.store_account AS "storeAccount",
+		a.store_name AS "storeName",
+		a.store_mobile AS "storeMobile",
+		a.address AS "address",
+		a.password AS "password",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="bizStoreJoins">
+	</sql>
+    
+	<select id="get" resultType="BizStore">
+		SELECT 
+			<include refid="bizStoreColumns"/>
+		FROM biz_store a
+		<include refid="bizStoreJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BizStore">
+		SELECT 
+			<include refid="bizStoreColumns"/>
+		FROM biz_store a
+		<include refid="bizStoreJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{storeName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{storeName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{storeName},'%')</if>
+			</if>
+			<if test="storeMobile != null and storeMobile != ''">
+				AND a.store_mobile = #{storeMobile}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address LIKE 
+					<if test="dbName == 'oracle'">'%'||#{address}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{address}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{address},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BizStore">
+		SELECT 
+			<include refid="bizStoreColumns"/>
+		FROM biz_store a
+		<include refid="bizStoreJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO biz_store(
+			id,
+			store_account,
+			store_name,
+			store_mobile,
+			address,
+			password,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{storeAccount},
+			#{storeName},
+			#{storeMobile},
+			#{address},
+			#{password},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE biz_store SET 	
+			store_account = #{storeAccount},
+			store_name = #{storeName},
+			store_mobile = #{storeMobile},
+			address = #{address},
+			password = #{password},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE biz_store SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

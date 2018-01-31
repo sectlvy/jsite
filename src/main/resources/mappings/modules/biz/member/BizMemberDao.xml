@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.biz.dao.member.BizMemberDao">
+    
+	<sql id="bizMemberColumns">
+		a.id AS "id",
+		a.nick_name AS "nickName",
+		a.account_no AS "accountNo",
+		a.password AS "password",
+		a.amount AS "amount",
+		a.biz_store_id AS "bizStoreId",
+		a.birthday AS "birthday",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="bizMemberJoins">
+	</sql>
+    
+	<select id="get" resultType="BizMember">
+		SELECT 
+			<include refid="bizMemberColumns"/>
+		FROM biz_member a
+		<include refid="bizMemberJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BizMember">
+		SELECT 
+			<include refid="bizMemberColumns"/>
+		FROM biz_member a
+		<include refid="bizMemberJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="nickName != null and nickName != ''">
+				AND a.nick_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{nickName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{nickName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{nickName},'%')</if>
+			</if>
+			<if test="accountNo != null and accountNo != ''">
+				AND a.account_no = #{accountNo}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BizMember">
+		SELECT 
+			<include refid="bizMemberColumns"/>
+		FROM biz_member a
+		<include refid="bizMemberJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO biz_member(
+			id,
+			nick_name,
+			account_no,
+			password,
+			amount,
+			biz_store_id,
+			birthday,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{nickName},
+			#{accountNo},
+			#{password},
+			#{amount},
+			#{bizStoreId},
+			#{birthday},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE biz_member SET 	
+			nick_name = #{nickName},
+			account_no = #{accountNo},
+			password = #{password},
+			amount = #{amount},
+			biz_store_id = #{bizStoreId},
+			birthday = #{birthday},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE biz_member SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
