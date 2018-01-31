@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.t2.dao.T2Dao">
+    
+	<sql id="t2Columns">
+		a.id AS "id",
+		a.name AS "name",
+		a.fx AS "fx",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="t2Joins">
+	</sql>
+    
+	<select id="get" resultType="T2">
+		SELECT 
+			<include refid="t2Columns"/>
+		FROM t2 a
+		<include refid="t2Joins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T2">
+		SELECT 
+			<include refid="t2Columns"/>
+		FROM t2 a
+		<include refid="t2Joins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T2">
+		SELECT 
+			<include refid="t2Columns"/>
+		FROM t2 a
+		<include refid="t2Joins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t2(
+			id,
+			name,
+			fx,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{name},
+			#{fx},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t2 SET 	
+			name = #{name},
+			fx = #{fx},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t2
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
