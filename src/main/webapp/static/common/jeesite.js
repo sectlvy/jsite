@@ -1,8 +1,8 @@
 /*!
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
+ * Copyright &copy; 2012-2016 com.nmf All rights reserved.
  * 
  * 通用公共方法
- * @author ThinkGem
+ * @author 北冥
  * @version 2014-4-29
  */
 $(document).ready(function() {

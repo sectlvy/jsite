@@ -1,5 +1,5 @@
 /**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
+ * Copyright &copy; 2012-2016 com.nmf All rights reserved.
  */
 package com.thinkgem.jeesite.tools;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 /**
  * 代码行数统计
- * @author ThinkGem
+ * @author 北冥
  * @version 2014-7-22
  */
 public class CodeCounter {

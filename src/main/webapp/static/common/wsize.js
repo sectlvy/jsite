@@ -1,8 +1,8 @@
 /*!
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
+ * Copyright &copy; 2012-2016 com.nmf All rights reserved.
  * 
  * 主框架窗口大小调整
- * @author ThinkGem
+ * @author 北冥
  * @version 2013-11-09
  */
 
